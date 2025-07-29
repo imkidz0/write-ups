@@ -1,21 +1,20 @@
 # Echo -UofT CTF 2025 (Pwn)
 Author : White  
 Description : Yet another echo service. However, the service keeps printing stack smashing detected for some reason, can you help me figure it out?  
-
 ## 1. Vulnerability Summary
 **Protection**  
 | RELRO         | Canary | NX   | PIE  |
 |---------------|--------|------|------|
 | Partial RELRO | Yes    | Yes  | Yes  |  
 
-There's no limitation on your input, and buffer starts at rsp+7.  
-Canary is located at rbp+8 so, technically you have only 1 byte to input something without stack smashing detection.  
-In other words, you can write something over canary.  
-
+- The program accepts unrestricted input to `printf`, resulting in a format string vulnerability
+- The buffer begins at `rsp + 7`
+- The stack canary resides at `rbp + 8`, allowing precisely 1 byte of overflow without triggering detection
+- The `__stack_chk_fail@GOT` entry can be overwritten via format string write
 ## 2. Exploitation Strategy
 | Step            | Detail                                                        |
 |-----------------|---------------------------------------------------------------|
-| GOT Overwrite   | `__stack_chk_fail@GOT` → `vuln()` using FSB (short write)     |
+| GOT Overwrite   | `__stack_chk_fail@GOT` → `vuln()` using FSB (Partial Overwrite)     |
 | Info Leak       | libc, PIE, stack canary via FSB `%lx|%lx|%lx` style           |
 | ROP             | Injected after bypassing canary; uses libc gadgets            |
 
