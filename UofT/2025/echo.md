@@ -1,20 +1,20 @@
 # [pwn] : UofT CTF 2025 - echo
-Author : White
-Description : Yet another echo service. However, the service keeps printing stack smashing detected for some reason, can you help me figure it out?
-
-- **Category** : Pwn
-- **Solves** : 54
-- **Protection** : Partial RELRO, NX on, Canary on, PIE on
+Author : White  
+Description : Yet another echo service. However, the service keeps printing stack smashing detected for some reason, can you help me figure it out?  
+  
+- **Category** : Pwn  
+- **Solves** : 54  
+- **Protection** : Partial RELRO, NX on, Canary on, PIE on  
 
 ## 1. Vulnerability Summary
-There's no limitation on your input, and buffer starts at rsp+7.
-Canary is located at rbp+8 so, technically you have only 1 byte to input something without stack smashing detection.
-In other words, you can write something over canary.
+There's no limitation on your input, and buffer starts at rsp+7.  
+Canary is located at rbp+8 so, technically you have only 1 byte to input something without stack smashing detection.  
+In other words, you can write something over canary.  
 
 ## 2. Exploitation Strategy
-1. **GOT Overwrite** : Overwrite __stack_chk_fail@GOT to vuln() by FSB
-2. **Leak** : Leak LIBC base, PIE base and Canary
-3. **ROP** : Perform ROP that includes Canary so that you can bypass your loop
+1. **GOT Overwrite** : Overwrite __stack_chk_fail@GOT to vuln() by FSB.  
+2. **Leak** : Leak LIBC base, PIE base and Canary.  
+3. **ROP** : Perform ROP that includes Canary so that you can bypass your loop.  
 
 ## 3. Exploit Code
 ```from pwn import *
