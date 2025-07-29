@@ -15,11 +15,11 @@ Description : Yet another echo service. However, the service keeps printing stac
 | Step            | Detail                                                        |
 |-----------------|---------------------------------------------------------------|
 | GOT Overwrite   | `__stack_chk_fail@GOT` → `vuln()` using FSB (Partial Overwrite)     |
-| Info Leak       | libc, PIE, stack canary via FSB `%lx|%lx|%lx` style           |
+| Info Leak       | libc, PIE, stack canary via FSB          |
 | ROP             | Injected after bypassing canary; uses libc gadgets            |
 
 ## 3. Exploit Code
-```from pwn import *
+```pythonfrom pwn import *
 
 p = process('./chall', env={'LD_PRELOAD':'./libc.so.6'})
 elf = ELF('./chall')
