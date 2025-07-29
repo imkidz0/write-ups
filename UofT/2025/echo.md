@@ -1,6 +1,6 @@
 # Echo -UofT CTF 2025 (Pwn)
-Author : White  
-Description : Yet another echo service. However, the service keeps printing stack smashing detected for some reason, can you help me figure it out?  
+**Author** : White  
+**Description** : Yet another echo service. However, the service keeps printing stack smashing detected for some reason, can you help me figure it out?  
 ## 1. Vulnerability Summary
 **Protection**  
 | RELRO         | Canary | NX   | PIE  |
