@@ -7,19 +7,19 @@ Description : Yet another echo service. However, the service keeps printing stac
 |---------------|--------|------|------|
 | Partial RELRO | Yes    | Yes  | Yes  |  
 
-- The program accepts unrestricted input to `printf`, resulting in a format string vulnerability
-- The buffer begins at `rsp + 7`
-- The stack canary resides at `rbp + 8`, allowing precisely 1 byte of overflow without triggering detection
-- The `__stack_chk_fail@GOT` entry can be overwritten via format string write
+- The program accepts unrestricted input to `printf`, resulting in a format string vulnerability.
+- The buffer begins at `rsp + 7`.
+- The stack canary resides at `rbp + 8`, allowing precisely 1 byte of overflow without triggering detection.
+- The `__stack_chk_fail@GOT` entry can be overwritten via format string write.
 ## 2. Exploitation Strategy
 | Step            | Detail                                                        |
 |-----------------|---------------------------------------------------------------|
 | GOT Overwrite   | `__stack_chk_fail@GOT` → `vuln()` using FSB (Partial Overwrite)     |
 | Info Leak       | libc, PIE, stack canary via FSB          |
 | ROP             | Injected after bypassing canary; uses libc gadgets            |
-
 ## 3. Exploit Code
-```pythonfrom pwn import *
+```python
+from pwn import *
 
 p = process('./chall', env={'LD_PRELOAD':'./libc.so.6'})
 elf = ELF('./chall')
