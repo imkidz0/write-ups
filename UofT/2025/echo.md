@@ -1,4 +1,4 @@
-# [pwn] : UofT CTF 2025
+# [pwn] : UofT CTF 2025 - echo
 Author : White
 Description : Yet another echo service. However, the service keeps printing stack smashing detected for some reason, can you help me figure it out?
 
@@ -6,19 +6,18 @@ Description : Yet another echo service. However, the service keeps printing stac
 - **Solves** : 54
 - **Protection** : Partial RELRO, NX on, Canary on, PIE on
 
-## Vulnerability
+## 1. Vulnerability Summary
 There's no limitation on your input, and buffer starts at rsp+7.
 Canary is located at rbp+8 so, technically you have only 1 byte to input something without stack smashing detection.
 In other words, you can write something over canary.
 
-## How to exploit
+## 2. Exploitation Strategy
 1. **GOT Overwrite** : Overwrite __stack_chk_fail@GOT to vuln() by FSB
 2. **Leak** : Leak LIBC base, PIE base and Canary
 3. **ROP** : Perform ROP that includes Canary so that you can bypass your loop
 
-## Exploitation
-```# solver.py
-from pwn import *
+## 3. Exploit Code
+```from pwn import *
 
 p = process('./chall', env={'LD_PRELOAD':'./libc.so.6'})
 elf = ELF('./chall')
